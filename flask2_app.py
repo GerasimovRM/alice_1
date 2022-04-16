@@ -85,6 +85,8 @@ def handle_dialog(res, req):
             elif 'нет' in req['request']['nlu']['tokens']:
                 res['response']['text'] = "Ну и ладно!"
                 res['end_session'] = True
+            elif 'помощь' == req['request']['original_utterance'].lower():
+                res['response']['text'] = 'Это текст сейчас Вам очень сильно помогает! Будьте смелее и продолжите общение!'
             else:
                 res['response']['text'] = "Ваш ответ непонятен! Да или нет?"
                 res['response']['buttons'] = [
@@ -101,6 +103,8 @@ def handle_dialog(res, req):
                         'hide': True
                     }
                 ]
+        elif 'помощь' == req['request']['original_utterance'].lower():
+            res['response']['text'] = 'Это текст сейчас Вам очень сильно помогает! Будьте смелее и продолжите общение!'
         else:
             game_play(res, req)
 
@@ -153,10 +157,30 @@ def game_play(res, req):
                     "image_id": cities[city][attempt - 1],
                 }
                 res["response"]['text'] = "А вот и не угадал!"
+                res['response']['buttons'] = [
+                    {
+                        'title': 'Помощь',
+                        'hide': True
+                    }
+                ]
             else:
                 res["response"]['text'] = f"Ты пытался! Это город {city}. Сыграем еще раз?"
                 sessionStorage[user_id]["game_started"] = False
                 sessionStorage[user_id]["guessed_cities"].append(city)
+                res['response']['buttons'] = [
+                    {
+                        'title': 'Да',
+                        'hide': True
+                    },
+                    {
+                        'title': 'Нет',
+                        'hide': True
+                    },
+                    {
+                        'title': 'Помощь',
+                        'hide': True
+                    }
+                ]
     sessionStorage[user_id]['attempt'] += 1
 
 
