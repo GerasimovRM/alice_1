@@ -1,6 +1,7 @@
 import math
 import requests
 
+
 def get_distance(p1, p2):
     # p1 и p2 - это кортежи из двух элементов - координаты точек
     radius = 6373.0
@@ -18,6 +19,7 @@ def get_distance(p1, p2):
 
     distance = radius * c
     return distance
+
 
 def get_country(city_name):
     try:
@@ -65,3 +67,12 @@ def get_coordinates(city_name):
         return long, lat
     except Exception as e:
         return e
+
+
+def get_geo_info(city_name, type_info):
+    if type_info not in ['country', 'coordinates']:
+        raise ValueError(f"{type_info} - незарегистрированный тип")
+    if type_info == 'country':
+        return get_country(city_name)
+    else:
+        return get_coordinates(city_name)
